@@ -11,7 +11,7 @@ const App = () =>{
 
 }
 
-export default App;
+
 import { useState } from 'react';
 import './App.css';
 import { TodoAdd } from './components/TodoAdd';
