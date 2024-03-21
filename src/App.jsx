@@ -1,61 +1,51 @@
-import React from 'react';
-import {TodoList} from './components/TodoList';
-
-
-const App = () =>{
-
-    return (
-      <TodoList/>
-
-    )
-
-}
-
-
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import { TodoAdd } from './components/TodoAdd';
-import { TodoList } from './components/TodoList';
-import { useTodo } from './hooks/useTodo';
+import TodoList from './components/TodoList';
+import AddTodoForm from './components/AddTodoForm';
 
 function App() {
-	const {
-		todos,
-		todosCount,
-		pendingTodosCount,
-		handleNewTodo,
-		handleDeleteTodo,
-		handleCompleteTodo,
-		handleUpdateTodo,
-	} = useTodo();
+  // Estado para almacenar las tareas
+  const [todos, setTodos] = useState([]);
 
-	return (
-		<>
-			<div className='card-to-do'>
-				<h1>Lista de tareas</h1>
-				<div className='counter-todos'>
-					<h3>
-						N° Tareas: <span>{todosCount}</span>
-					</h3>
-					<h3>
-						Pendientes: <span>{pendingTodosCount}</span>
-					</h3>
-				</div>
+  // Almacenar las tareas en el almacenamiento local al cargar la página
+  useEffect(() => {
+    const storedTodos = JSON.parse(localStorage.getItem('todos'));
+    if (storedTodos) {
+      setTodos(storedTodos);
+    }
+  }, []);
 
-				<div className='add-todo'>
-					<h3>Agregar Tarea</h3>
-					<TodoAdd handleNewTodo={handleNewTodo} />
-				</div>
+  // Guardar las tareas en el almacenamiento local cada vez que se actualice el estado
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
 
-				<TodoList
-					todos={todos}
-					handleUpdateTodo={handleUpdateTodo}
-					handleDeleteTodo={handleDeleteTodo}
-					handleCompleteTodo={handleCompleteTodo}
-				/>
-			</div>
-		</>
-	);
+  // Agregar una nueva tarea
+  const addTodo = (todo) => {
+    setTodos([...todos, todo]);
+  };
+
+  // Editar una tarea
+  const updateTodo = (index, updatedTodo) => {
+    const newTodos = [...todos];
+    newTodos[index] = updatedTodo;
+    setTodos(newTodos);
+  };
+
+  // Eliminar una tarea
+  const deleteTodo = (index) => {
+    const newTodos = [...todos];
+    newTodos.splice(index, 1);
+    setTodos(newTodos);
+  };
+
+  return (
+    <div className="App">
+      <h1>TODO List</h1>
+      <AddTodoForm addTodo={addTodo} />
+      <TodoList todos={todos} updateTodo={updateTodo} deleteTodo={deleteTodo} />
+    </div>
+  );
 }
 
 export default App;

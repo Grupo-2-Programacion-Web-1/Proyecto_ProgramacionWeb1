@@ -1,27 +1,32 @@
-import React from 'react';
-import { FaTrash } from 'react-icons/fa';
-import { TodoUpdate } from './TodoUpdate';
+import React, { useState } from 'react';
 
-export const TodoItem = ({
-	todo,
-	handleUpdateTodo,
-	handleDeleteTodo,
-	handleCompleteTodo,
-}) => {
-	return (
-		<li>
-			<span onClick={() => handleCompleteTodo(todo.id)}>
-				<label
-					className={`container-done ${todo.done ? 'active' : ''}`}
-				></label>
-			</span>
-			<TodoUpdate todo={todo} handleUpdateTodo={handleUpdateTodo} />
-			<button
-				className='btn-delete'
-				onClick={() => handleDeleteTodo(todo.id)}
-			>
-				<FaTrash />
-			</button>
-		</li>
-	);
-};
+function TodoItem({ todo, index, updateTodo, deleteTodo }) {
+  const [text, setText] = useState(todo.text);
+  const [status, setStatus] = useState(todo.status);
+
+  // Manejar cambios en el estado de la tarea
+  const handleStatusChange = (e) => {
+    setStatus(e.target.value);
+    updateTodo(index, { text, status: e.target.value });
+  };
+
+  // Manejar cambios en el texto de la tarea
+  const handleTextChange = (e) => {
+    setText(e.target.value);
+    updateTodo(index, { text: e.target.value, status });
+  };
+
+  return (
+    <div>
+      <input type="text" value={text} onChange={handleTextChange} />
+      <select value={status} onChange={handleStatusChange}>
+        <option value="Por hacer">Por hacer</option>
+        <option value="En progreso">En progreso</option>
+        <option value="Finalizada">Finalizada</option>
+      </select>
+      <button onClick={() => deleteTodo(index)}>Eliminar</button>
+    </div>
+  );
+}
+
+export default TodoItem;

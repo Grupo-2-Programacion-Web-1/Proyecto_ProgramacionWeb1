@@ -1,40 +1,27 @@
-import React from 'react';
-import { useForm } from '../hooks/useForm';
+import React, { useState } from 'react';
 
-export const TodoAdd = ({ handleNewTodo }) => {
-	const { description, onInputChange, onResetForm } = useForm({
-		description: '',
-	});
+function AddTodoForm({ addTodo }) {
+  const [text, setText] = useState('');
 
-	const onFormSubmit = e => {
-		e.preventDefault();
+  // Manejar envío del formulario para agregar una nueva tarea
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!text.trim()) return; // No agregar tarea vacía
+    addTodo({ text, status: 'Por hacer' });
+    setText(''); // Limpiar el campo de entrada después de agregar la tarea
+  };
 
-		if (description.length <= 1) return;
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Agregar nueva tarea"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <button type="submit">Agregar</button>
+    </form>
+  );
+}
 
-		let newTodo = {
-			id: new Date().getTime(),
-			description: description,
-			done: false,
-		};
-
-		handleNewTodo(newTodo);
-		onResetForm();
-	};
-
-	return (
-		<form onSubmit={onFormSubmit}>
-			<input
-				type='text'
-				className='input-add'
-				name='description'
-				value={description}
-				onChange={onInputChange}
-				placeholder='¿Qué hay que hacer?'
-			/>
-
-			<button className='btn-add' type='submit'>
-				Agregar
-			</button>
-		</form>
-	);
-};
+export default AddTodoForm;

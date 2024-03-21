@@ -1,23 +1,19 @@
 import React from 'react';
-import { TodoItem } from './TodoItem';
+import TodoItem from './TodoItem';
 
-export const TodoList = ({
-	todos,
-	handleUpdateTodo,
-	handleDeleteTodo,
-	handleCompleteTodo,
-}) => {
-	return (
-		<ul>
-			{todos.map(todo => (
-				<TodoItem
-					key={todo.id}
-					todo={todo}
-					handleUpdateTodo={handleUpdateTodo}
-					handleDeleteTodo={handleDeleteTodo}
-					handleCompleteTodo={handleCompleteTodo}
-				/>
-			))}
-		</ul>
-	);
-};
+function TodoList({ todos, updateTodo, deleteTodo }) {
+  return (
+    <div>
+      {todos.length > 0 ? (
+        todos.map((todo, index) => (
+          <TodoItem key={index} index={index} todo={todo} updateTodo={updateTodo} deleteTodo={deleteTodo} />
+        ))
+      ) : (
+        <p>No hay tareas por el momento</p>
+      )}
+    </div>
+  );
+}
+
+export default TodoList;
+
